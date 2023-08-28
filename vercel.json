@@ -1,14 +1,18 @@
 {
-    "builds":[{
-        "scr":"clari6/wsgi.py",
-        "use":"@vercel/python",
-        "config":{"maxLmbdaSize": "15mb", "runtime": "python3.11"}
-    }],
-    "routes":[
+    "builds": [
+        {
+            "src": "clari6/wsgi.py",
+            "use": "@vercel/python",
+            "config": {
+                "maxLambdaSize": "15mb",
+                "runtime": "python3.11"
+            }
+        }
+    ],
+    "routes": [
         {
             "src": "/(.*)",
             "dest": "clari6/wsgi.py"
         }
     ]
-
 }
