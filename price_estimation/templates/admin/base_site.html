@@ -1,0 +1,32 @@
+{% extends 'admin/base.html' %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <style>
+        /* Add your custom CSS styles here */
+        .custom-button {
+            margin: 10px;
+        }
+
+        .custom-button .button {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+    </style>
+{% endblock %}
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+        <!-- Add your custom breadcrumbs or remove this block if not needed -->
+        {{ block.super }}
+    </div>
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+{% endblock %}
+
