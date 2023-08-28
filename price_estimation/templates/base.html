@@ -1,0 +1,135 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROZTECH - Empower Your Production</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Global Styles */
+        body {
+            background-color: #f0f0f0;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: #007bff;
+        }
+
+        .navbar-brand {
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* Flex Container */
+        .flex-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        
+
+        .nav-link {
+            color: white;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #f8f9fa;
+        }
+
+        /* Main Content */
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background-color: #ff6f61;
+            border-color: #ff6f61;
+            font-weight: bold;
+        }
+
+        .btn-primary:hover {
+            background-color: #ee524a;
+            border-color: #ee524a;
+        }
+
+        /* Admin Button */
+        .admin-button {
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+            padding: 5px 10px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .admin-button:hover {
+            background-color: #218838;
+        }
+
+        
+
+        .social-icons a img {
+        width: 30px; /* Adjust this value to your desired width */
+        height: auto; /* Maintain aspect ratio */
+        margin: 0 10px; /* Add spacing between icons */
+        
+        }
+    </style>
+</head>
+<body>
+    <div class="flex-container">
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="{% url 'landing_page' %}">ROZTECH</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'manage_overheads' %}">Manage Overheads</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'select_product' %}">Manage Products</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'product_summaries' %}">Product Summaries</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'admin:index' %}" class="admin-button">Admin</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="main-content container mt-5">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    </div>
+
+    <div class="bottom-bar">
+        <div class="container text-center">
+            <p>Empower Your Production with ROZTECH</p>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

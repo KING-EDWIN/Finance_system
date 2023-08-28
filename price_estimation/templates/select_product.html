@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Select Product{% endblock %}
+
+{% block content %}
+<h2>Select Product</h2>
+<form method="post" id="select-product-form" action="">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Select Product</button>
+</form>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const selectForm = document.getElementById("select-product-form");
+
+    selectForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+        const selectedProductId = selectForm.product.value;
+        const url = "{% url 'enter_product_data' product_id=0 %}".replace("0", selectedProductId);
+        window.location.href = url;
+    });
+});
+</script>
+{% endblock %}

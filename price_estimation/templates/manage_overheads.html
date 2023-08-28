@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+
+{% block title %}Manage Overheads{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <h2>Manage Overheads</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label for="overhead_name">Select or Add Overhead:</label>
+        <select name="overhead_name" id="overhead_name">
+            <option value="">-- Select or Add --</option>
+            {% for name in predefined_overheads %}
+                <option value="{{ name }}">{{ name }}</option>
+            {% endfor %}
+            <option value="new">Enter New Overhead</option> <!-- Add this option -->
+        </select>
+        <input type="text" name="new_overhead" placeholder="Enter new overhead name" id="new-overhead" style="display: none;">
+        <label for="price">Price:</label>
+        <input type="number" step="any" name="price" required>
+        <button type="submit">Add Overhead</button>
+    </form>
+
+    <h3>Existing Overheads:</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Overhead Name</th>
+                <th>Price</th>
+                <th>Edit</th>
+                <th>Delete</th> <!-- New column for delete button -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for overhead in overheads %}
+                <tr>
+                    <td>{{ overhead.name }}</td>
+                    <td>{{ overhead.price|intcomma }}</td> <!-- Apply intcomma filter to format price -->
+                    <td><a href="{% url 'edit_overhead' overhead.id %}">Edit</a></td>
+                    <td>
+                        <form method="post" action="{% url 'delete_overhead' overhead.id %}">
+                            {% csrf_token %}
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- JavaScript code here -->
+</div> 
+{% endblock %}

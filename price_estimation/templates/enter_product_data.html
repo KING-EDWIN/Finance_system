@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Enter Product Data{% endblock %}
+
+{% block content %}
+<h2>Enter Product Data - {{ product.name }}</h2>
+<form method="post">
+    {% csrf_token %}
+
+    <h3>Product Information:</h3>
+    <div>
+        <label for="id_overhead_percentage">Overhead Percentage:</label>
+        <input type="number" step="any" name="overhead_percentage" id="id_overhead_percentage"
+               value="{{ form.initial.overhead_percentage }}">
+    </div>
+
+    <div>
+        <label for="id_batches_per_month">Number of Batches Made in a Month:</label>
+        <input type="number" step="any" name="batches_per_month" id="id_batches_per_month"
+               value="{{ form.initial.batches_per_month }}">
+    </div>
+
+    <div>
+        <label for="id_items_in_batch">Number of Items in a Batch:</label>
+        <input type="number" step="any" name="items_in_batch" id="id_items_in_batch"
+               value="{{ form.initial.items_in_batch }}">
+    </div>
+
+    <h3>Raw Materials:</h3>
+    {% for raw_material in raw_materials %}
+    <div>
+        <label for="id_raw_material_{{ raw_material.id }}_quantity">{{ raw_material.material.name }} Quantity:</label>
+        <input type="number" step="any" name="raw_material_{{ raw_material.id }}_quantity"
+               id="id_raw_material_{{ raw_material.id }}_quantity" value="{{ raw_material.quantity }}">
+
+        <label for="id_raw_material_{{ raw_material.id }}_unit_price">{{ raw_material.material.name }} Unit Price:</label>
+        <input type="number" step="any" name="raw_material_{{ raw_material.id }}_unit_price"
+               id="id_raw_material_{{ raw_material.id }}_unit_price" value="{{ raw_material.unit_price }}">
+    </div>
+    {% endfor %}
+
+    <h3>Packaging Materials:</h3>
+    {% for packaging_material in packaging_materials %}
+    <div>
+        <label for="id_packaging_material_{{ packaging_material.id }}_quantity">{{ packaging_material.material.name }} Quantity:</label>
+        <input type="number" step="any" name="packaging_material_{{ packaging_material.id }}_quantity"
+               id="id_packaging_material_{{ packaging_material.id }}_quantity" value="{{ packaging_material.quantity }}">
+
+        <label for="id_packaging_material_{{ packaging_material.id }}_unit_price">{{ packaging_material.material.name }} Unit Price:</label>
+        <input type="number" step="any" name="packaging_material_{{ packaging_material.id }}_unit_price"
+               id="id_packaging_material_{{ packaging_material.id }}_unit_price" value="{{ packaging_material.unit_price }}">
+    </div>
+    {% endfor %}
+
+    <button type="submit">Save Changes</button>
+</form>
+
+<a href="{% url 'select_product' %}">Can Edit another product</a>
+{% endblock %}

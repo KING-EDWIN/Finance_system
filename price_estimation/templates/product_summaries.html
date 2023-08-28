@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% load humanize %} <!-- Load the humanize template tags -->
+
+{% block title %}SUMMMARY {% endblock %}
+
+{% block content %}
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            padding: 10px; /* Adjust the padding value to increase or decrease spacing */
+            text-align: center; /* Center-align text within cells */
+            border: 1px solid #ddd; /* Add border for clarity */
+        }
+        th {
+            background-color: #f2f2f2; /* Gray background for headings */
+        }
+        td.product-name {
+            width: 20%; /* Adjust the width as needed */
+            word-wrap: break-word; /* Allow long names to wrap onto multiple lines */
+            text-align: left; /* Left-align text within product name cell */
+        }
+    </style>
+
+    <h1>Product Summaries</h1>
+    <table>
+        <tr>
+            <th>Product Name</th>
+            <th>Total Material Cost</th>
+            <th>Overhead Percentage Used</th>
+            <th>Estimated Batch Price</th>
+            <th>Estimated Item Price</th>
+        </tr>
+        {% for summary in summaries %}
+        <tr>
+            <td class="product-name">{{ summary.product.name }}</td>
+            <td>{{ summary.total_material_cost|intcomma }}</td> <!-- Apply intcomma filter here -->
+            <td>{{ summary.overhead_percentage_used|intcomma }}</td> <!-- Apply intcomma filter here -->
+            <td>{{ summary.estimated_batch_price|intcomma }}</td> <!-- Apply intcomma filter here -->
+            <td>{{ summary.estimated_item_price|intcomma }}</td> <!-- Apply intcomma filter here -->
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
