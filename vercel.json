@@ -11,13 +11,13 @@
     ],
     "routes": [
         {
-            "src":"clari6/static/(.*)",
+            "src":"clari6/clari6/static/(.*)",
             "dest":"staticfiles/$1"
 
         },
         {
             "src": "/(.*)",
-            "dest": "clari6/wsgi.py"
+            "dest": "clari6/clari6/wsgi.py"
         }
     ]
 }
