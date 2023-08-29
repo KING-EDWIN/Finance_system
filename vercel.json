@@ -1,8 +1,4 @@
 {
-    "env":{
-        "DATABASE_URL" : "DATABASE_URL"
-
-    },
     "builds": [
         {
             "src": "clari6/wsgi.py",

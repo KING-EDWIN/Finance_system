@@ -43,9 +43,9 @@ SECRET_KEY = 'django-insecure-lkvze+!l#&7!#kdwyai70w+_vxba&hn)l4)18b&4a^o$8b6u93
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = [ '127.0.0.1', '.vercel.app']
+ALLOWED_HOSTS = [ '127.0.0.1', '.vercel.app', 'render.app']
 
 
 # Application definition
@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'price_estimation',
     'django.contrib.humanize'
+    #'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 MIDDLEWARE = [
@@ -152,7 +153,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 
-
+#STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATIC_URL = '/static/'
