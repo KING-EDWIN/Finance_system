@@ -51,7 +51,7 @@ ALLOWED_HOSTS = [ '127.0.0.1', '.vercel.app', '.onrender.com']
 # Application definition
 
 INSTALLED_APPS = [
-    'whitenoise.runserver_nonstatic',
+    #'whitenoise.runserver_nonstatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

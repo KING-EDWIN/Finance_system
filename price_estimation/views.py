@@ -123,7 +123,7 @@ from django.shortcuts import render, redirect
 from .forms import AddProductForm
 from .models import RawMaterial, PackagingMaterial, Product
 
-def add_product_data(request):
+"""def add_product_data(request):
     if request.method == 'POST':
         form = AddProductForm(request.POST)
         if form.is_valid():
@@ -162,7 +162,7 @@ def add_product_data(request):
         'form': form,
     }
     return render(request, 'add_product_data.html', context)
-
+"""
 
 
 def product_summaries(request):
