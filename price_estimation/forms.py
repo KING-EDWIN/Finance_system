@@ -1,5 +1,5 @@
 from django import forms
-from .models import Overhead, Product, RawMaterialQuantity, PackagingMaterialQuantity
+from .models import Overhead, Product, RawMaterial, PackagingMaterial, RawMaterialQuantity, PackagingMaterialQuantity
 
 class OverheadForm(forms.ModelForm):
     class Meta:
@@ -58,3 +58,32 @@ class ProductDataForm(forms.Form):
         self.fields['items_in_batch'] = forms.IntegerField(
             label='Items in Batch', min_value=0, required=False
         )
+
+
+
+class AddProductForm(forms.Form):
+    name = forms.CharField(label='Product Name')
+    overhead_percentage = forms.DecimalField(label='Overhead Percentage', required=False)
+    batches_per_month = forms.IntegerField(label='Batches per Month', min_value=0, required=False)
+    items_in_batch = forms.IntegerField(label='Items in Batch', min_value=0, required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        raw_materials = RawMaterial.objects.all()
+        packaging_materials = PackagingMaterial.objects.all()
+
+        for material in raw_materials:
+            self.fields[f'{material.name}_quantity'] = forms.DecimalField(
+                label=f'{material.name} Quantity', required=False
+            )
+            self.fields[f'{material.name}_unit_price'] = forms.DecimalField(
+                label=f'{material.name} Unit Price', required=False
+            )
+
+        for material in packaging_materials:
+            self.fields[f'{material.name}_quantity'] = forms.DecimalField(
+                label=f'{material.name} Quantity', required=False
+            )
+            self.fields[f'{material.name}_unit_price'] = forms.DecimalField(
+                label=f'{material.name} Unit Price', required=False
+            )

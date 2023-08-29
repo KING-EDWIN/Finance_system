@@ -7,7 +7,8 @@
 <form method="post" id="select-product-form" action="">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Select Product</button>
+    <button type="submit" name="select_product">Select Product</button>
+    <button type="submit" name="add_product">Add Product</button>
 </form>
 
 <script>

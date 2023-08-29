@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.shortcuts import render, get_object_or_404
 
-from .forms import OverheadForm, ProductSelectionForm, ProductDataForm
+from .forms import OverheadForm, ProductSelectionForm, ProductDataForm, AddProductForm
 
 #from .forms import OverheadForm, PackagingMaterialQuantityForm, ProductForm, RawMaterialQuantityForm
 from .models import Overhead, RawMaterial, PackagingMaterial, Product, RawMaterialQuantity, PackagingMaterialQuantity
@@ -39,16 +39,30 @@ def manage_overheads(request):
 
 
 def select_product(request):
+    # Retrieve all existing products from the database
     products = Product.objects.all()
+
     if request.method == 'POST':
+        # If the form has been submitted (a product has been selected)
         form = ProductSelectionForm(request.POST)
         if form.is_valid():
+            # Get the selected product ID from the form data
             selected_product_id = form.cleaned_data['product']
+
+            # Check if the user clicked on the "Add Product" button
+            if 'add_product' in request.POST:
+                # Redirect to the "Add Product Data" page
+                return redirect('add_product_data')
+            
+            # Redirect to the "Enter Product Data" page for the selected product
             return redirect('enter_product_data', product_id=selected_product_id)
     else:
+        # If the request method is GET (initial page load), create an empty form
         form = ProductSelectionForm()
 
+    # Render the "Select Product" template with the form and the list of products
     return render(request, 'select_product.html', {'form': form, 'products': products})
+
 
 from django.forms import modelformset_factory
 from .forms import ProductDataForm  # Import the ProductDataForm
@@ -105,7 +119,49 @@ def enter_product_data(request, product_id):
 
 
 
+from django.shortcuts import render, redirect
+from .forms import AddProductForm
+from .models import RawMaterial, PackagingMaterial, Product
 
+def add_product_data(request):
+    if request.method == 'POST':
+        form = AddProductForm(request.POST)
+        if form.is_valid():
+            # Process and save data
+            product = Product.objects.create(
+                name=form.cleaned_data['name'],
+                overhead_percentage=form.cleaned_data['overhead_percentage'],
+                batches_per_month=form.cleaned_data['batches_per_month'],
+                items_in_batch=form.cleaned_data['items_in_batch']
+            )
+
+            raw_materials = RawMaterial.objects.all()
+            packaging_materials = PackagingMaterial.objects.all()
+
+            for material in raw_materials:
+                quantity_field_name = f'{material.name}_quantity'
+                unit_price_field_name = f'{material.name}_unit_price'
+                quantity = form.cleaned_data.get(quantity_field_name)
+                unit_price = form.cleaned_data.get(unit_price_field_name)
+                if quantity is not None and unit_price is not None:
+                    RawMaterialQuantity.objects.create(product=product, material=material, quantity=quantity, unit_price=unit_price)
+
+            for material in packaging_materials:
+                quantity_field_name = f'{material.name}_quantity'
+                unit_price_field_name = f'{material.name}_unit_price'
+                quantity = form.cleaned_data.get(quantity_field_name)
+                unit_price = form.cleaned_data.get(unit_price_field_name)
+                if quantity is not None and unit_price is not None:
+                    PackagingMaterialQuantity.objects.create(product=product, material=material, quantity=quantity, unit_price=unit_price)
+
+            return redirect('select_product')  # Redirect to a different page if needed
+    else:
+        form = AddProductForm()
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'add_product_data.html', context)
 
 
 

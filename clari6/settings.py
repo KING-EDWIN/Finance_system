@@ -43,7 +43,7 @@ SECRET_KEY = 'django-insecure-lkvze+!l#&7!#kdwyai70w+_vxba&hn)l4)18b&4a^o$8b6u93
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [ '127.0.0.1', '.vercel.app', '.onrender.com']
 
@@ -154,7 +154,7 @@ USE_TZ = True
 
 
 #STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATIC_URL = '/static/'
 
