@@ -2,10 +2,13 @@
 
 {% load humanize %} <!-- Load the humanize template tags -->
 
-{% block title %}SUMMMARY {% endblock %}
+{% block title %}SUMMARY{% endblock %}
 
 {% block content %}
     <style>
+        .table-container {
+            overflow-x: auto; /* Enable horizontal scrolling */
+        }
         table {
             border-collapse: collapse;
             width: 100%;
@@ -26,22 +29,38 @@
     </style>
 
     <h1>Product Summaries</h1>
-    <table>
-        <tr>
-            <th>Product Name</th>
-            <th>Total Material Cost</th>
-            <th>Aportioned Overhead Total</th>
-            <th>Estimated Batch Price</th>
-            <th>Estimated Item Price</th>
-        </tr>
-        {% for summary in summaries %}
-        <tr>
-            <td class="product-name">{{ summary.product.name }}</td>
-            <td>{{ summary.total_material_cost|intcomma }}</td> <!-- Apply intcomma filter here -->
-            <td>{{ summary.overhead_percentage_used|intcomma }}</td> <!-- Apply intcomma filter here -->
-            <td>{{ summary.estimated_batch_price|intcomma }}</td> <!-- Apply intcomma filter here -->
-            <td>{{ summary.estimated_item_price|intcomma }}</td> <!-- Apply intcomma filter here -->
-        </tr>
-        {% endfor %}
-    </table>
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>Product Name</th>
+                <th>Total Raw Material Cost</th>
+                <th>Total Packaging Material Cost</th>
+                <th>Total Material Cost</th>
+                <th>Total Overhead Apportioned</th>
+                <th>Total Batch Production Cost</th>
+                <th>Total Item Production Price</th>
+                <th>Markup</th> <!-- New column -->
+                <th>Selling Price</th> <!-- New column -->
+            </tr>
+            {% for summary in summaries %}
+            <tr>
+                <td class="product-name">{{ summary.product.name }}</td>
+                <td>{{ summary.total_raw_cost|intcomma }}</td>
+                <td>{{ summary.total_packaging_cost|intcomma }}</td>
+                <td>{{ summary.total_material_cost|intcomma }}</td>
+                <td>{{ summary.overhead_percentage_used|intcomma }}</td>
+                <td>{{ summary.estimated_batch_price|intcomma }}</td>
+                <td>{{ summary.estimated_item_price|intcomma }}</td>
+                <td>{{ summary.product.markup }}</td> <!-- Display the markup value -->
+                <td>
+                    {% if summary.selling_price %}
+                        {{ summary.selling_price|intcomma }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 {% endblock %}

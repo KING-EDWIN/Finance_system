@@ -1,53 +1,61 @@
-{% load static %}
+{% extends 'base.html' %}
 
+{% load humanize %} <!-- Load the humanize template tags -->
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ROZTECH</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="{% url 'landing_page' %}">ROZTECH</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'manage_overheads' %}">Manage Overheads</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'select_product' %}">Manage Products</a>
-                <li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'product_summaries' %}">Summary of  Products</a>
-                    <li>
+{% block title %}SUMMARY{% endblock %}
 
-                <li><a href="{% url 'admin:index' %}" class="admin-button">Admin</a></li>
-               
-                </li>
-                
-            </ul>
-        </div>
-    </nav>
+{% block content %}
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            padding: 10px; /* Adjust the padding value to increase or decrease spacing */
+            text-align: center; /* Center-align text within cells */
+            border: 1px solid #ddd; /* Add border for clarity */
+        }
+        th {
+            background-color: #f2f2f2; /* Gray background for headings */
+        }
+        td.product-name {
+            width: 20%; /* Adjust the width as needed */
+            word-wrap: break-word; /* Allow long names to wrap onto multiple lines */
+            text-align: left; /* Left-align text within product name cell */
+        }
+    </style>
 
-    <div class="container mt-4">
-        {% block content %}
-        {% endblock %}
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
-
-
-
-
+    <h1>Product Summaries</h1>
+    <table>
+        <tr>
+            <th>Product Name</th>
+            <th>Total Raw Material Cost</th>
+            <th>Total Packaging Material Cost</th>
+            <th>Total Material Cost</th>
+            <th>Total Overhead Apportioned</th>
+            <th>Total Batch Production Cost</th>
+            <th>Total Item Production Price</th>
+            <th>Markup</th> <!-- New column -->
+            <th>Selling Price</th> <!-- New column -->
+        </tr>
+        {% for summary in summaries %}
+        <tr>
+            <td class="product-name">{{ summary.product.name }}</td>
+            <td>{{ summary.total_raw_cost|intcomma }}</td>
+            <td>{{ summary.total_packaging_cost|intcomma }}</td>
+            <td>{{ summary.total_material_cost|intcomma }}</td>
+            <td>{{ summary.overhead_percentage_used|intcomma }}</td>
+            <td>{{ summary.estimated_batch_price|intcomma }}</td>
+            <td>{{ summary.estimated_item_price|intcomma }}</td>
+            <td>{{ summary.product.markup }}</td> <!-- Display the markup value -->
+            <td>
+                {% if summary.selling_price %}
+                    {{ summary.selling_price|intcomma }}
+                {% else %}
+                    N/A
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

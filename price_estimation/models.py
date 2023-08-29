@@ -25,10 +25,12 @@ class Product(models.Model):
     name = models.CharField(max_length=200)
     overhead_percentage = models.DecimalField(max_digits=5, decimal_places=2)
     batches_per_month = models.PositiveIntegerField()
-    items_in_batch=models.PositiveIntegerField()
+    items_in_batch = models.PositiveIntegerField()
+    markup = models.DecimalField(max_digits=5, decimal_places=2, default= 20)
 
     def __str__(self):
         return self.name
+
 
 class RawMaterialQuantity(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

@@ -48,7 +48,7 @@ class ProductDataForm(forms.Form):
                 label=f'{material.name} Unit Price', required=False
             )
 
-        # Add the new fields for overhead_percentage, batches_per_month, and items_in_batch
+        # Add the new fields for overhead_percentage, batches_per_month, items_in_batch, and markup
         self.fields['overhead_percentage'] = forms.DecimalField(
             label='Overhead Percentage', required=False
         )
@@ -58,9 +58,13 @@ class ProductDataForm(forms.Form):
         self.fields['items_in_batch'] = forms.IntegerField(
             label='Items in Batch', min_value=0, required=False
         )
+        self.fields['markup'] = forms.DecimalField(
+            label='Markup', required=False
+        )
 
 
 
+""" 
 class AddProductForm(forms.Form):
     name = forms.CharField(label='Product Name')
     overhead_percentage = forms.DecimalField(label='Overhead Percentage', required=False)
@@ -87,3 +91,4 @@ class AddProductForm(forms.Form):
             self.fields[f'{material.name}_unit_price'] = forms.DecimalField(
                 label=f'{material.name} Unit Price', required=False
             )
+            """

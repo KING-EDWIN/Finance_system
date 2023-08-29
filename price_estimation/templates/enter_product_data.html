@@ -11,7 +11,7 @@
 
     <h3>Product Information:</h3>
     <div>
-        <label for="id_overhead_percentage">Overhead Percentage:</label>
+        <label for="id_overhead_percentage">Overhead Percentage(%):</label>
         <input type="number" step="any" name="overhead_percentage" id="id_overhead_percentage"
                value="{{ form.initial.overhead_percentage }}">
     </div>
@@ -27,6 +27,12 @@
         <input type="number" step="any" name="items_in_batch" id="id_items_in_batch"
                value="{{ form.initial.items_in_batch }}">
     </div>
+
+    <div>
+       <label for="id_markup">Markup (%):</label>
+       <input type="number" step="any" name="markup" id="id_markup"
+              value="{{ form.initial.markup }}">
+   </div>
 
     <h3>Raw Materials:</h3>
     {% for raw_material in raw_materials %}

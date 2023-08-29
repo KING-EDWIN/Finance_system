@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.shortcuts import render, get_object_or_404
 
-from .forms import OverheadForm, ProductSelectionForm, ProductDataForm, AddProductForm
+from .forms import OverheadForm, ProductSelectionForm, ProductDataForm
 
 #from .forms import OverheadForm, PackagingMaterialQuantityForm, ProductForm, RawMaterialQuantityForm
 from .models import Overhead, RawMaterial, PackagingMaterial, Product, RawMaterialQuantity, PackagingMaterialQuantity
@@ -88,6 +88,7 @@ def enter_product_data(request, product_id):
             product.overhead_percentage = form.cleaned_data['overhead_percentage']
             product.batches_per_month = form.cleaned_data['batches_per_month']
             product.items_in_batch = form.cleaned_data['items_in_batch']
+            product.markup = form.cleaned_data['markup']  # Save the markup value
             product.save()
 
             # Save RawMaterialQuantity formset
@@ -102,6 +103,7 @@ def enter_product_data(request, product_id):
             'overhead_percentage': product.overhead_percentage,
             'batches_per_month': product.batches_per_month,
             'items_in_batch': product.items_in_batch,
+            'markup': product.markup,  # Include the markup value
         }
    
         form = ProductDataForm(initial=initial_data)  # Use the appropriate form class here
@@ -118,11 +120,11 @@ def enter_product_data(request, product_id):
 
 
 
-
 from django.shortcuts import render, redirect
-from .forms import AddProductForm
+#from .forms import AddProductForm
 from .models import RawMaterial, PackagingMaterial, Product
 
+""" 
 def add_product_data(request):
     if request.method == 'POST':
         form = AddProductForm(request.POST)
@@ -162,7 +164,7 @@ def add_product_data(request):
         'form': form,
     }
     return render(request, 'add_product_data.html', context)
-
+"""
 
 
 def product_summaries(request):
@@ -179,31 +181,44 @@ def product_summaries(request):
         total_packaging_cost = sum(material.quantity * material.unit_price for material in packaging_materials)
         total_material_cost = total_raw_cost + total_packaging_cost
 
-        #overhead_cost = (total_material_cost * product.overhead_percentage) / 100
-        overhead_percentage_used = total_overhead_price *(product.overhead_percentage/100) 
+        overhead_percentage_used = total_overhead_price * (product.overhead_percentage / 100)
 
         estimated_batch_price = total_material_cost + (overhead_percentage_used / product.batches_per_month)
         estimated_item_price = estimated_batch_price / product.items_in_batch
 
+        # Calculate the selling price using the provided markup
+        if product.markup is not None:
+            selling_price = (estimated_item_price * product.markup / 100) + estimated_item_price
+        else:
+            selling_price = None
 
-         # Rounding to two decimal places
+
+        # Rounding to two decimal places
         total_material_cost = round(total_material_cost, 2)
         overhead_percentage_used = round(overhead_percentage_used, 2)
         estimated_batch_price = round(estimated_batch_price, 2)
         estimated_item_price = round(estimated_item_price, 2)
+        total_raw_cost= round(total_raw_cost,2)
+        total_packaging_cost=round(total_packaging_cost,2)
+        selling_price=round(selling_price,2)
 
 
 
         summaries.append({
             'product': product,
+            'total_raw_cost': total_raw_cost, 
+            'total_packaging_cost': total_packaging_cost,
             'total_material_cost': total_material_cost,
             'overhead_percentage_used': overhead_percentage_used,
             'estimated_batch_price': estimated_batch_price,
             'estimated_item_price': estimated_item_price,
+            'markup': product.markup,  # Include markup in the context
+            'selling_price': selling_price,  # Include calculated selling price in the context
         })
 
     context = {'summaries': summaries}
     return render(request, 'product_summaries.html', context)
+
 
 def submit_overhead(request):
     if request.method == 'POST':

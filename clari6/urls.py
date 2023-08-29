@@ -32,7 +32,7 @@ urlpatterns = [
     # URL to manage a specific product
      path('select_product/', views.select_product, name='select_product'),
      path('enter_product_data/<int:product_id>/', views.enter_product_data, name='enter_product_data'),
-     path('add_new_product/', views.add_product_data, name='add_product_data'),
+     #path('add_new_product/', views.add_product_data, name='add_product_data'),
 
     
     # URL to view product summary
