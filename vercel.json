@@ -11,7 +11,7 @@
     ],
     "routes": [
         {
-            "src":"^/static/(.*)",
+            "src":"clari6/static/(.*)",
             "dest":"staticfiles/$1"
 
         },
