@@ -1,9 +1,13 @@
 {
+    "env":{
+        "DATABASE_URL" : "DATABASE_URL"
+
+    },
     "builds": [
         {
             "src": "clari6/wsgi.py",
             "use": "@vercel/python",
-            "config": {
+        "config": {
                 "maxLambdaSize": "15mb",
                 "runtime": "python3.11"
             }

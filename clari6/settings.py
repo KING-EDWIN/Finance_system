@@ -10,6 +10,19 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import environ
+
+env=environ.Env()
+
+
+
+environ.Env.read_env()
+
+
+
+
+
+
 import os
 from pathlib import Path
 
@@ -82,15 +95,24 @@ WSGI_APPLICATION = 'clari6.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
+""" DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'finance1',
-        'USER': 'postgres',
-        'PASSWORD': 'KING178.',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
+}
+"""
+
+
+
+import dj_database_url
+
+DATABASES = {
+    'default':dj_database_url.parse(' postgres://finance_m6dm_user:yXyrSkWPmQITEewmCkcswJGTkXZcNgNq@dpg-cjmhvl7jbvhs73c037kg-a.ohio-postgres.render.com/finance_m6dm')
 }
 
 
@@ -131,7 +153,7 @@ USE_TZ = True
 
 
 
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATIC_URL = '/static/'
 
