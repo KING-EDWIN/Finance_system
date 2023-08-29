@@ -185,6 +185,15 @@ def product_summaries(request):
         estimated_batch_price = total_material_cost + (overhead_percentage_used / product.batches_per_month)
         estimated_item_price = estimated_batch_price / product.items_in_batch
 
+
+         # Rounding to two decimal places
+        total_material_cost = round(total_material_cost, 2)
+        overhead_percentage_used = round(overhead_percentage_used, 2)
+        estimated_batch_price = round(estimated_batch_price, 2)
+        estimated_item_price = round(estimated_item_price, 2)
+
+
+
         summaries.append({
             'product': product,
             'total_material_cost': total_material_cost,
@@ -195,6 +204,7 @@ def product_summaries(request):
 
     context = {'summaries': summaries}
     return render(request, 'product_summaries.html', context)
+
 def submit_overhead(request):
     if request.method == 'POST':
         form = OverheadForm(request.POST)
