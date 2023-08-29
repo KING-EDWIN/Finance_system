@@ -51,6 +51,7 @@ ALLOWED_HOSTS = [ '127.0.0.1', '.vercel.app', '.onrender.com']
 # Application definition
 
 INSTALLED_APPS = [
+    #'whitenoise.runserver_nonstatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -59,17 +60,19 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'price_estimation',
     'django.contrib.humanize'
-    #'whitenoise.middleware.WhiteNoiseMiddleware',
+   
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'clari6.urls'
@@ -153,7 +156,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 
-#STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATIC_URL = '/static/'
