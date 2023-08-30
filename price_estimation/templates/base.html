@@ -3,8 +3,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!--link rel="icon" href="{% static 'images/your_logo.png' %}" type="image/png"-->
-    <!--link rel="icon" href="{% static 'images/your_logo.png' %}" type="image/png"-->
+    <link rel="icon" href="{% static 'images/logo.png' %}" type="image/png">
+    <link rel="icon" href="{% static 'images/logo.png' %}" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,6 +17,11 @@
             background-color: #f0f0f0;
             font-family: 'Roboto', sans-serif;
         }
+        .logo-image {
+        width: 40px; /* Adjust the width as needed */
+        height: auto; /* Maintain aspect ratio */
+        margin-right: 10px;
+         } /* Add spacing between logo and text */
 
         /* Navbar */
         .navbar {
@@ -94,7 +99,7 @@
 <body>
     <div class="flex-container">
     <nav class="navbar navbar-expand-lg navbar-dark">
-        <a class="navbar-brand" href="{% url 'landing_page' %}">KPILcosting</a>
+        <a class="navbar-brand" href="{% url 'landing_page' %}"><img src="{% static 'images/logo.png' %}" alt="Logo" class="logo-image"> KPILcosting</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
