@@ -74,17 +74,16 @@ def enter_product_data(request, product_id):
 
     RawMaterialQuantityFormSet = modelformset_factory(
         RawMaterialQuantity,
-        form=ProductDataForm,  # Use the appropriate form class here
+        form=ProductDataForm,
         fields=('quantity', 'unit_price'),
         extra=0,
     )
     PackagingMaterialQuantityFormSet = modelformset_factory(
         PackagingMaterialQuantity,
-        form=ProductDataForm,  # Reuse the same form or create a new one
+        form=ProductDataForm,
         fields=('quantity', 'unit_price'),
         extra=0,
     )
-
 
     if request.method == 'POST':
         form = ProductDataForm(request.POST, product=product)
@@ -96,13 +95,10 @@ def enter_product_data(request, product_id):
             product.overhead_percentage = form.cleaned_data['overhead_percentage']
             product.batches_per_month = form.cleaned_data['batches_per_month']
             product.items_in_batch = form.cleaned_data['items_in_batch']
-            product.markup = form.cleaned_data['markup']  # Save the markup value
+            product.markup = form.cleaned_data['markup']
             product.save()
 
-          # Save RawMaterialQuantity formset
             raw_material_formset.save()
-
-            # Save PackagingMaterialQuantity formset
             packaging_material_formset.save()
 
             return redirect('select_product')
@@ -112,10 +108,10 @@ def enter_product_data(request, product_id):
             'overhead_percentage': product.overhead_percentage,
             'batches_per_month': product.batches_per_month,
             'items_in_batch': product.items_in_batch,
-            'markup': product.markup,  # Include the markup value
+            'markup': product.markup,
         }
    
-        form = ProductDataForm(initial=initial_data)  # Use the appropriate form class here
+        form = ProductDataForm(initial=initial_data, product=product)
         raw_material_formset = RawMaterialQuantityFormSet(queryset=raw_materials)
         packaging_material_formset = PackagingMaterialQuantityFormSet(queryset=packaging_materials)
         
@@ -124,10 +120,11 @@ def enter_product_data(request, product_id):
         'raw_materials': raw_materials,
         'packaging_materials': packaging_materials,
         'form': form,
-         'raw_material_formset': raw_material_formset,  # Pass the raw material formset to the context
-        'packaging_material_formset': packaging_material_formset,  # Pass the packaging formset to the context
+        'raw_material_formset': raw_material_formset,
+        'packaging_material_formset': packaging_material_formset,
     }
     return render(request, 'enter_product_data.html', context)
+
 
 
 
