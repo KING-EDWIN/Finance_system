@@ -91,7 +91,7 @@ def enter_product_data(request, product_id):
         raw_material_formset = RawMaterialQuantityFormSet(request.POST, queryset=raw_materials)
         packaging_material_formset = PackagingMaterialQuantityFormSet(request.POST, queryset=packaging_materials)
         
-        if form.is_valid() and formset.is_valid():
+        if form.is_valid() and raw_material_formset.is_valid() and packaging_material_formset.is_valid():
             # Process and save data
             product.overhead_percentage = form.cleaned_data['overhead_percentage']
             product.batches_per_month = form.cleaned_data['batches_per_month']
