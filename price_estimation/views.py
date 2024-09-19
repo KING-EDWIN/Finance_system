@@ -65,65 +65,68 @@ def select_product(request):
 
 
 from django.forms import modelformset_factory
-from .forms import ProductDataForm  # Import the ProductDataForm
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Product, RawMaterialQuantity, PackagingMaterialQuantity
+from .forms import ProductDataForm
 
 def enter_product_data(request, product_id):
-    product = Product.objects.get(pk=product_id)
+    product = get_object_or_404(Product, pk=product_id)
     raw_materials = RawMaterialQuantity.objects.filter(product=product)
     packaging_materials = PackagingMaterialQuantity.objects.filter(product=product)
 
+    # Create formsets for RawMaterialQuantity and PackagingMaterialQuantity models
     RawMaterialQuantityFormSet = modelformset_factory(
         RawMaterialQuantity,
-        form=ProductDataForm,
         fields=('quantity', 'unit_price'),
         extra=0,
     )
     PackagingMaterialQuantityFormSet = modelformset_factory(
         PackagingMaterialQuantity,
-        form=ProductDataForm,
         fields=('quantity', 'unit_price'),
         extra=0,
     )
 
     if request.method == 'POST':
+        # Handle POST request with the data submitted by the user
         form = ProductDataForm(request.POST, product=product)
         raw_material_formset = RawMaterialQuantityFormSet(request.POST, queryset=raw_materials)
         packaging_material_formset = PackagingMaterialQuantityFormSet(request.POST, queryset=packaging_materials)
-        
+
         if form.is_valid() and raw_material_formset.is_valid() and packaging_material_formset.is_valid():
-            # Process and save data
+            # Save the product-specific data
             product.overhead_percentage = form.cleaned_data['overhead_percentage']
             product.batches_per_month = form.cleaned_data['batches_per_month']
             product.items_in_batch = form.cleaned_data['items_in_batch']
             product.markup = form.cleaned_data['markup']
             product.save()
 
+            # Save formsets for raw materials and packaging materials
             raw_material_formset.save()
             packaging_material_formset.save()
 
             return redirect('select_product')
 
     else:
+        # Pre-populate form with existing product data
         initial_data = {
             'overhead_percentage': product.overhead_percentage,
             'batches_per_month': product.batches_per_month,
             'items_in_batch': product.items_in_batch,
             'markup': product.markup,
         }
-   
         form = ProductDataForm(initial=initial_data, product=product)
         raw_material_formset = RawMaterialQuantityFormSet(queryset=raw_materials)
         packaging_material_formset = PackagingMaterialQuantityFormSet(queryset=packaging_materials)
-        
+
+    # Pass data to template for rendering
     context = {
         'product': product,
-        'raw_materials': raw_materials,
-        'packaging_materials': packaging_materials,
         'form': form,
         'raw_material_formset': raw_material_formset,
         'packaging_material_formset': packaging_material_formset,
     }
     return render(request, 'enter_product_data.html', context)
+
 
 
 
