@@ -69,6 +69,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, RawMaterialQuantity, PackagingMaterialQuantity
 from .forms import ProductDataForm
 
+from django.forms import modelformset_factory
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Product, RawMaterialQuantity, PackagingMaterialQuantity
+from .forms import ProductDataForm
+
 def enter_product_data(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
     raw_materials = RawMaterialQuantity.objects.filter(product=product)
@@ -126,7 +131,6 @@ def enter_product_data(request, product_id):
         'packaging_material_formset': packaging_material_formset,
     }
     return render(request, 'enter_product_data.html', context)
-
 
 
 
