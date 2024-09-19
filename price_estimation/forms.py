@@ -19,7 +19,7 @@ class ProductSelectionForm(forms.Form):
 
 
 from django import forms
-from .models import RawMaterial, PackagingMaterial
+from .models import RawMaterial, PackagingMaterial, Product
 
 class ProductDataForm(forms.Form):
     def __init__(self, *args, product=None, **kwargs):
@@ -66,6 +66,7 @@ class ProductDataForm(forms.Form):
         self.fields['markup'] = forms.DecimalField(
             label='Markup (%)', required=False, decimal_places=2
         )
+
 """ 
 class AddProductForm(forms.Form):
     name = forms.CharField(label='Product Name')
