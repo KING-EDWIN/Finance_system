@@ -78,10 +78,18 @@ def enter_product_data(request, product_id):
         fields=('quantity', 'unit_price'),
         extra=0,
     )
+    PackagingMaterialQuantityFormSet = modelformset_factory(
+        PackagingMaterialQuantity,
+        form=ProductDataForm,  # Reuse the same form or create a new one
+        fields=('quantity', 'unit_price'),
+        extra=0,
+    )
+
 
     if request.method == 'POST':
         form = ProductDataForm(request.POST, product=product)
-        formset = RawMaterialQuantityFormSet(request.POST, queryset=raw_materials)
+        raw_material_formset = RawMaterialQuantityFormSet(request.POST, queryset=raw_materials)
+        packaging_material_formset = PackagingMaterialQuantityFormSet(request.POST, queryset=packaging_materials)
         
         if form.is_valid() and formset.is_valid():
             # Process and save data
@@ -91,11 +99,12 @@ def enter_product_data(request, product_id):
             product.markup = form.cleaned_data['markup']  # Save the markup value
             product.save()
 
-            # Save RawMaterialQuantity formset
-            formset.save()
+          # Save RawMaterialQuantity formset
+            raw_material_formset.save()
 
-            # Save PackagingMaterialQuantity formset similarly
-            
+            # Save PackagingMaterialQuantity formset
+            packaging_material_formset.save()
+
             return redirect('select_product')
 
     else:
@@ -107,14 +116,16 @@ def enter_product_data(request, product_id):
         }
    
         form = ProductDataForm(initial=initial_data)  # Use the appropriate form class here
-        formset = RawMaterialQuantityFormSet(queryset=raw_materials)
-
+        raw_material_formset = RawMaterialQuantityFormSet(queryset=raw_materials)
+        packaging_material_formset = PackagingMaterialQuantityFormSet(queryset=packaging_materials)
+        
     context = {
         'product': product,
         'raw_materials': raw_materials,
         'packaging_materials': packaging_materials,
         'form': form,
-        'formset': formset,  # Pass the formset to the context
+         'raw_material_formset': raw_material_formset,  # Pass the raw material formset to the context
+        'packaging_material_formset': packaging_material_formset,  # Pass the packaging formset to the context
     }
     return render(request, 'enter_product_data.html', context)
 
