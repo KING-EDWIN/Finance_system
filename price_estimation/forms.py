@@ -18,9 +18,6 @@ class ProductSelectionForm(forms.Form):
 
 
 
-from django import forms
-from .models import RawMaterial, PackagingMaterial, Product
-
 class ProductDataForm(forms.Form):
     def __init__(self, *args, product=None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -29,33 +26,31 @@ class ProductDataForm(forms.Form):
         raw_materials = RawMaterial.objects.all()
         packaging_materials = PackagingMaterial.objects.all()
 
-        # Dynamically add fields for raw materials
         for material in raw_materials:
-            quantity_field_name = f'raw_material_{material.id}_quantity'
-            unit_price_field_name = f'raw_material_{material.id}_unit_price'
+            quantity_field_name = f'{material.name}_quantity'
+            unit_price_field_name = f'{material.name}_unit_price'
 
             self.fields[quantity_field_name] = forms.DecimalField(
-                label=f'{material.name} Quantity', required=False, decimal_places=2
+                label=f'{material.name} Quantity', required=False
             )
             self.fields[unit_price_field_name] = forms.DecimalField(
-                label=f'{material.name} Unit Price', required=False, decimal_places=2
+                label=f'{material.name} Unit Price', required=False
             )
 
-        # Dynamically add fields for packaging materials
         for material in packaging_materials:
-            quantity_field_name = f'packaging_material_{material.id}_quantity'
-            unit_price_field_name = f'packaging_material_{material.id}_unit_price'
+            quantity_field_name = f'{material.name}_quantity'
+            unit_price_field_name = f'{material.name}_unit_price'
 
             self.fields[quantity_field_name] = forms.DecimalField(
-                label=f'{material.name} Quantity', required=False, decimal_places=2
+                label=f'{material.name} Quantity', required=False
             )
             self.fields[unit_price_field_name] = forms.DecimalField(
-                label=f'{material.name} Unit Price', required=False, decimal_places=2
+                label=f'{material.name} Unit Price', required=False
             )
 
-        # Add fields for product-specific data
+        # Add the new fields for overhead_percentage, batches_per_month, items_in_batch, and markup
         self.fields['overhead_percentage'] = forms.DecimalField(
-            label='Overhead Percentage (%)', required=False, decimal_places=2
+            label='Overhead Percentage', required=False
         )
         self.fields['batches_per_month'] = forms.IntegerField(
             label='Batches per Month', min_value=0, required=False
@@ -64,8 +59,10 @@ class ProductDataForm(forms.Form):
             label='Items in Batch', min_value=0, required=False
         )
         self.fields['markup'] = forms.DecimalField(
-            label='Markup (%)', required=False, decimal_places=2
+            label='Markup', required=False
         )
+
+
 
 """ 
 class AddProductForm(forms.Form):
@@ -94,4 +91,52 @@ class AddProductForm(forms.Form):
             self.fields[f'{material.name}_unit_price'] = forms.DecimalField(
                 label=f'{material.name} Unit Price', required=False
             )
-            """
+            """)                                            this is the models.py (from django.db import models
+
+class Overhead(models.Model):
+    name = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=20, decimal_places=2)
+
+    def __str__(self):
+        return self.name
+
+class RawMaterial(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+class PackagingMaterial(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+class Product(models.Model):
+    name = models.CharField(max_length=200)
+    overhead_percentage = models.DecimalField(max_digits=5, decimal_places=2)
+    batches_per_month = models.PositiveIntegerField()
+    items_in_batch = models.PositiveIntegerField()
+    markup = models.DecimalField(max_digits=5, decimal_places=2, default= 20)
+
+    def __str__(self):
+        return self.name
+
+
+class RawMaterialQuantity(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    material = models.ForeignKey(RawMaterial, on_delete=models.CASCADE)
+    quantity = models.DecimalField(max_digits=10, decimal_places=2)
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.product.name} - {self.material.name}"
+
+class PackagingMaterialQuantity(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    material = models.ForeignKey(PackagingMaterial, on_delete=models.CASCADE)
+    quantity = models.DecimalField(max_digits=10, decimal_places=2)
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.product.name} - {self.material.name}"
