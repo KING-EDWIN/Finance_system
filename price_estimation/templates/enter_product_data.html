@@ -10,24 +10,67 @@
     {% csrf_token %}
 
     <h3>Product Information:</h3>
-    {{ form.as_p }}
+<div>
+    <label for="{{ product_form.overhead_percentage.id_for_label }}">Overhead Percentage:</label>
+    {{ product_form.overhead_percentage }} <!-- Ensure this renders an input element -->
+</div>
+<div>
+    <label for="{{ product_form.batches_per_month.id_for_label }}">Batches per Month:</label>
+    {{ product_form.batches_per_month }} <!-- Ensure this renders an input element -->
+</div>
+<div>
+    <label for="{{ product_form.items_in_batch.id_for_label }}">Items in Batch:</label>
+    {{ product_form.items_in_batch }} <!-- Ensure this renders an input element -->
+</div>
+<div>
+    <label for="{{ product_form.markup.id_for_label }}">Markup:</label>
+    {{ product_form.markup }} <!-- Ensure this renders an input element -->
+</div>
+
+
 
     <h3>Raw Materials:</h3>
     {{ raw_material_formset.management_form }}
     {% for form in raw_material_formset %}
     <div>
-        {{ form.quantity.label_tag }} {{ form.quantity }}
+        
+        <label>{{ form.instance.material.name }}</label> 
+        <input type="hidden" name="{{ form.id.name }}" value="{{ form.id.value }}"/>
+        {{ form.quantity.label_tag }} {{ form.quantity }} &nbsp;
         {{ form.unit_price.label_tag }} {{ form.unit_price }}
     </div>
+    {% if form.errors %}
+    <div class="error">
+        {{ form.non_field_errors }}
+        {{ form.id.errors }}
+        {{ form.quantity.errors }}
+        {{ form.unit_price.errors }}
+    </div>
+    {% endif %}
+    {% empty %}
+    <p>No raw materials available.</p>
     {% endfor %}
 
     <h3>Packaging Materials:</h3>
     {{ packaging_material_formset.management_form }}
     {% for form in packaging_material_formset %}
     <div>
-        {{ form.quantity.label_tag }} {{ form.quantity }}
+        
+        <label>{{ form.instance.material.name }}</label>
+        <input type="hidden" name="{{ form.id.name }}" value="{{ form.id.value }}"/> 
+        {{ form.quantity.label_tag }} {{ form.quantity }} &nbsp;
         {{ form.unit_price.label_tag }} {{ form.unit_price }}
     </div>
+    {% if form.errors %}
+    <div class="error">
+        {{ form.non_field_errors }}
+        {{ form.id.errors }}
+        {{ form.quantity.errors }}
+        {{ form.unit_price.errors }}
+    </div>
+    {% endif %}
+    {% empty %}
+    <p>No packaging materials available.</p>
     {% endfor %}
 
     <button type="submit">Save Changes</button>

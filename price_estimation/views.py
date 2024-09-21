@@ -67,6 +67,13 @@ def select_product(request):
 from django.forms import modelformset_factory
 from .forms import ProductDataForm  # Import the ProductDataForm
 
+from django.forms import modelformset_factory
+from .forms import ProductDataForm  # Import the ProductDataForm
+from django.forms import modelformset_factory
+from .forms import ProductDataForm, RawMaterialQuantityForm, PackagingMaterialQuantityForm  # Separate forms
+from django.forms import modelformset_factory
+from .forms import ProductDataForm, RawMaterialQuantityForm, PackagingMaterialQuantityForm  # Separate forms
+
 def enter_product_data(request, product_id):
     product = Product.objects.get(pk=product_id)
     raw_materials = RawMaterialQuantity.objects.filter(product=product)
@@ -74,49 +81,58 @@ def enter_product_data(request, product_id):
 
     RawMaterialQuantityFormSet = modelformset_factory(
         RawMaterialQuantity,
-        form=ProductDataForm,  # Use the appropriate form class here
-        fields=('quantity', 'unit_price'),
+        form=RawMaterialQuantityForm,  # Separate form class for raw material
+        extra=0,
+    )
+
+    PackagingMaterialQuantityFormSet = modelformset_factory(
+        PackagingMaterialQuantity,
+        form=PackagingMaterialQuantityForm,  # Separate form class for packaging material
         extra=0,
     )
 
     if request.method == 'POST':
-        form = ProductDataForm(request.POST, product=product)
-        formset = RawMaterialQuantityFormSet(request.POST, queryset=raw_materials)
-        
-        if form.is_valid() and formset.is_valid():
-            # Process and save data
-            product.overhead_percentage = form.cleaned_data['overhead_percentage']
-            product.batches_per_month = form.cleaned_data['batches_per_month']
-            product.items_in_batch = form.cleaned_data['items_in_batch']
-            product.markup = form.cleaned_data['markup']  # Save the markup value
-            product.save()
+        print("POST data:", request.POST) 
+        product_form = ProductDataForm(request.POST, instance=product)
+        raw_material_formset = RawMaterialQuantityFormSet(request.POST, queryset=raw_materials)
+        packaging_material_formset = PackagingMaterialQuantityFormSet(request.POST, queryset=packaging_materials)
+
+        if product_form.is_valid() and raw_material_formset.is_valid() and packaging_material_formset.is_valid():
+            # Save product data
+            updated_product = product_form.save(commit=False)
+            updated_product.save()
+            print(f"Product {product.name} updated successfully.")
 
             # Save RawMaterialQuantity formset
-            formset.save()
+            raw_material_formset.save()
+            print("Raw materials updated successfully.")
 
-            # Save PackagingMaterialQuantity formset similarly
-            
+            # Save PackagingMaterialQuantity formset
+            packaging_material_formset.save()
+            print("Packaging materials updated successfully.")
+
             return redirect('select_product')
-
+        else:
+            print("Form errors:", product_form.errors, raw_material_formset.errors, packaging_material_formset.errors)
+         
+         # Re-fetch the material instances for each form in the formsets after errors
+        raw_material_formset = RawMaterialQuantityFormSet(queryset=RawMaterialQuantity.objects.filter(product=product))
+        packaging_material_formset = PackagingMaterialQuantityFormSet(queryset=PackagingMaterialQuantity.objects.filter(product=product))
+            
     else:
-        initial_data = {
-            'overhead_percentage': product.overhead_percentage,
-            'batches_per_month': product.batches_per_month,
-            'items_in_batch': product.items_in_batch,
-            'markup': product.markup,  # Include the markup value
-        }
-   
-        form = ProductDataForm(initial=initial_data)  # Use the appropriate form class here
-        formset = RawMaterialQuantityFormSet(queryset=raw_materials)
+        product_form = ProductDataForm(instance=product)
+        raw_material_formset = RawMaterialQuantityFormSet(queryset=raw_materials)
+        packaging_material_formset = PackagingMaterialQuantityFormSet(queryset=packaging_materials)
 
     context = {
         'product': product,
-        'raw_materials': raw_materials,
-        'packaging_materials': packaging_materials,
-        'form': form,
-        'formset': formset,  # Pass the formset to the context
+        'product_form': product_form,  # Product form
+        'raw_material_formset': raw_material_formset,  # Raw materials formset
+        'packaging_material_formset': packaging_material_formset,  # Packaging materials formset
     }
     return render(request, 'enter_product_data.html', context)
+
+
 
 
 
@@ -187,7 +203,9 @@ def submit_overhead(request):
     else:
         form = OverheadForm()
     
-    return render(request, 'submit_overhead.html', {'form': form})              def edit_overhead(request, overhead_id):
+    return render(request, 'submit_overhead.html', {'form': form})              
+
+def edit_overhead(request, overhead_id):
     overhead = get_object_or_404(Overhead, id=overhead_id)
 
     if request.method == 'POST':
@@ -206,4 +224,4 @@ def delete_overhead(request, overhead_id):
     if request.method == 'POST':
         overhead.delete()
         return redirect('manage_overheads')
-    return render(request, 'delete_overhead.html', {'overhead': overhead})  )
+    return render(request, 'delete_overhead.html', {'overhead': overhead})  
