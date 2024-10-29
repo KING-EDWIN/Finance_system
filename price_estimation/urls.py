@@ -31,4 +31,8 @@ urlpatterns = [
 
      path('delete_overhead/<int:overhead_id>/', views.delete_overhead, name='delete_overhead'),
 
+
+     # other paths
+    path('product/<int:product_id>/data/', views.enter_product_data, name='enter_product_data'),
+
 ]

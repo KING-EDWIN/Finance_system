@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Enter Product Data{% endblock %}
+
+{% block content %}
+<h2>Enter Product Data - {{ product.name }}</h2>
+<form method="post" action="{% url 'enter_product_data' product.id %}">
+    {% csrf_token %}
+
+    <h3>Product Information:</h3>
+    <div>
+        <label for="overhead_percentage">Overhead Percentage:</label>
+        <input type="text" name="overhead_percentage" id="overhead_percentage" value="{{ product.overhead_percentage }}" required>
+    </div>
+    <div>
+        <label for="batches_per_month">Batches per Month:</label>
+        <input type="text" name="batches_per_month" id="batches_per_month" value="{{ product.batches_per_month }}" required>
+    </div>
+    <div>
+        <label for="items_in_batch">Items in Batch:</label>
+        <input type="text" name="items_in_batch" id="items_in_batch" value="{{ product.items_in_batch }}" required>
+    </div>
+    <div>
+        <label for="markup">Markup:</label>
+        <input type="text" name="markup" id="markup" value="{{ product.markup }}" required>
+    </div>
+
+    <h3>Raw Materials:</h3>
+    {% for material in raw_materials %}
+    <div>
+        <label>{{ material.name }}</label>
+        <input type="hidden" name="raw_materials-{{ forloop.counter0 }}-id" value="{{ material.id }}">
+        <label for="quantity-{{ forloop.counter0 }}">Quantity:</label>
+        <input type="text" name="raw_materials-{{ forloop.counter0 }}-quantity" value="{{ material.quantity }}" required>
+        
+        <label for="unit_price-{{ forloop.counter0 }}">Unit Price:</label>
+        <input type="text" name="raw_materials-{{ forloop.counter0 }}-unit_price" value="{{ material.unit_price }}" required>
+    </div>
+    {% endfor %}
+
+    <h3>Packaging Materials:</h3>
+    {% for material in packaging_materials %}
+    <div>
+        <label>{{ material.name }}</label>
+        <input type="hidden" name="packaging_materials-{{ forloop.counter0 }}-id" value="{{ material.id }}">
+        <label for="quantity-{{ forloop.counter0 }}">Quantity:</label>
+        <input type="text" name="packaging_materials-{{ forloop.counter0 }}-quantity" value="{{ material.quantity }}" required>
+
+        <label for="unit_price-{{ forloop.counter0 }}">Unit Price:</label>
+        <input type="text" name="packaging_materials-{{ forloop.counter0 }}-unit_price" value="{{ material.unit_price }}" required>
+    </div>
+    {% endfor %}
+
+    <button type="submit">Save Changes</button>
+</form>
+
+<a href="{% url 'select_product' %}">Edit another product</a>
+{% endblock %}

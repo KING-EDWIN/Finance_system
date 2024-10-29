@@ -224,4 +224,44 @@ def delete_overhead(request, overhead_id):
     if request.method == 'POST':
         overhead.delete()
         return redirect('manage_overheads')
-    return render(request, 'delete_overhead.html', {'overhead': overhead})  
+    return render(request, 'delete_overhead.html', {'overhead': overhead}) 
+
+###new class rendering the product data template
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Product, RawMaterial, PackagingMaterial
+from django.urls import reverse
+
+def enter_product_data(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    raw_materials = RawMaterial.objects.filter(product=product)
+    packaging_materials = PackagingMaterial.objects.filter(product=product)
+
+    if request.method == "POST":
+        # Get product data
+        product.overhead_percentage = request.POST.get("overhead_percentage")
+        product.batches_per_month = request.POST.get("batches_per_month")
+        product.items_in_batch = request.POST.get("items_in_batch")
+        product.markup = request.POST.get("markup")
+        product.save()
+
+        # Update raw materials
+        for i, material in enumerate(raw_materials):
+            material.quantity = request.POST.get(f"raw_materials-{i}-quantity")
+            material.unit_price = request.POST.get(f"raw_materials-{i}-unit_price")
+            material.save()
+
+        # Update packaging materials
+        for i, material in enumerate(packaging_materials):
+            material.quantity = request.POST.get(f"packaging_materials-{i}-quantity")
+            material.unit_price = request.POST.get(f"packaging_materials-{i}-unit_price")
+            material.save()
+
+        return redirect(reverse("select_product"))  # Adjust with actual name
+
+    return render(request, "product_data.html", {
+        "product": product,
+        "raw_materials": raw_materials,
+        "packaging_materials": packaging_materials,
+    })
+
