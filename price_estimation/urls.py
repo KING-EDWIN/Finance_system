@@ -9,7 +9,7 @@ urlpatterns = [
     
     # URL to manage products
     path('select_product/', views.select_product, name='select_product'),
-    path('enter_product_data/<int:product_id>/', views.enter_product_data, name='enter_product_data'),
+    path('enter_product_data/<int:product_id>/', views.enter_product_datas, name='enter_product_data'),
     
     
     # URL to view product summary
