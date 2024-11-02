@@ -28,7 +28,7 @@
     <h3>Raw Materials:</h3>
     {% for material in raw_materials %}
     <div>
-        <label>{{ material.name }}</label>
+        <label>{{ material.material.name }}</label>
         <input type="hidden" name="raw_materials-{{ forloop.counter0 }}-id" value="{{ material.id }}">
         <label for="quantity-{{ forloop.counter0 }}">Quantity:</label>
         <input type="text" name="raw_materials-{{ forloop.counter0 }}-quantity" value="{{ material.quantity }}" required>
@@ -41,7 +41,7 @@
     <h3>Packaging Materials:</h3>
     {% for material in packaging_materials %}
     <div>
-        <label>{{ material.name }}</label>
+        <label>{{ material.material.name }}</label>
         <input type="hidden" name="packaging_materials-{{ forloop.counter0 }}-id" value="{{ material.id }}">
         <label for="quantity-{{ forloop.counter0 }}">Quantity:</label>
         <input type="text" name="packaging_materials-{{ forloop.counter0 }}-quantity" value="{{ material.quantity }}" required>
